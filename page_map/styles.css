@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+main {
+    padding: 20px;
+}
+
+#map {
+    height: 500px;
+}
+
+.user-location-marker {
+    background-color: #00FF00;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}
+.sonva-marker {
+    background-color: #FF0000;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}
