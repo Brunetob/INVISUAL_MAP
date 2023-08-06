@@ -74,3 +74,11 @@ recenterToUserButton.onAdd = function (map) {
 };
 
 recenterToUserButton.addTo(map);
+
+//Zona delimitada
+var polygon = L.polygon([
+    [-2.9123480829109094, -78.994802731196],
+    [-2.9123688307683473, -78.99611673029776],
+    [-2.9134762471044566, -78.9961556828403],
+    [-2.9135047753797516, -78.99481831221301]
+]).addTo(map);
