@@ -13,7 +13,7 @@ var sonva_Pin = L.icon({
     iconUrl: 'https://drive.google.com/uc?export=view&id=1fYDCDYPuWH9lm77oV_3D-2M3GOBXy8ot',
 
     iconSize:     [50, 50], // size of the icon
-    iconAnchor:   [30, 46],
+    iconAnchor:   [50, 46],
     shadowSize:   [50, 64], // size of the shadow
     shadowAnchor: [4, 62],  // the same for the shadow
     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
@@ -105,3 +105,17 @@ var polygon = L.polygon([
     [-2.9127152896138107, -78.99615215452314],
     [-2.912347523173246, -78.99583060607564]
 ]).addTo(map);
+
+//******************************Marcadores de los obstáculos******************************
+//crear ícono del marcador
+var obsOneIcon = L.icon({
+    iconUrl: 'https://drive.google.com/uc?export=view&id=1LaPTa0TwcOpBzEXcbrZm617cioXSUBU8',
+
+    iconSize:     [20, 30], // size of the icon
+    iconAnchor:   [10, 46],
+    shadowSize:   [50, 64], // size of the shadow
+    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
+const obsOne = L.marker([-2.9127463739190893, -78.99484858021965], {icon: obsOneIcon}).addTo(map);// marcador creado
