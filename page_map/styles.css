@@ -1,21 +1,52 @@
-/* Estilos básicos, ajusta según tus necesidades */
-body {
+/* Estilos base para todo el documento */
+body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    height: 100%;
+}
+/*Estilos contenedor principal*/
+.main_container{
+    width: 100%;
+    height: 100%;
+    display:  flex;
+    flex-direction: column;
 }
 
-header {
-    background-color: #333;
-    color: #fff;
+/*Estilos header*/
+header h1{
     text-align: center;
-    padding: 10px;
 }
 
-main {
-    padding: 20px;
+/* Estilos para el contenedor del mapa */
+.container_map {
+    display: flex;
+    width: 100%;
+    background-color: aqua;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
+/* Estilos para el mapa */
 #map {
-    height: 500px;
+    height: 80%;
+    width: 80%;
+}
+
+/*Estilos Footer*/
+footer h3{
+    text-align: center;
+}
+
+/* Media query para dispositivos con un ancho máximo de 600px (celulares) */
+@media (max-width: 600px) {
+    .container_map {
+        flex-direction: column; /* Cambiar a disposición vertical */
+        height: 100%; /* Ocupar toda la altura disponible */
+    }
+
+    #map {
+        height: 100%; /* Dividir en mitades */
+        width: 100%; /* Ocupar todo el ancho disponible */
+    }
 }

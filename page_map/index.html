@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvisualMap - Página del Mapa</title>
+    <title>Mapa con Leaflet</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>InvisualMap - Página del Mapa</h1>
-    </header>
-    <main>
-        <div id="map"></div>
-    </main>
+    <div class="main_container">
+        <header>
+            <h1>INVISUAL MAP</h1>
+        </header>
+        <div class="container_map">
+            <div id="map"></div>
+        </div>
+        <footer>
+            <h3>&#169 Derechos Recervados</h3>
+        </footer>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
