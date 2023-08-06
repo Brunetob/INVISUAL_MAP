@@ -7,9 +7,10 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-// Crear un marcador en las coordenadas iniciales (Sonva) y agregarlo al mapa
+// ***Crear un marcador en las coordenadas iniciales (Sonva) y agregarlo al mapa ***
+//crear ícono del marcador
 var sonva_Pin = L.icon({
-    iconUrl: '../img/sonva_pin.png',
+    iconUrl: 'https://drive.google.com/uc?export=view&id=1fYDCDYPuWH9lm77oV_3D-2M3GOBXy8ot',
 
     iconSize:     [50, 50], // size of the icon
     iconAnchor:   [30, 46],
@@ -18,7 +19,8 @@ var sonva_Pin = L.icon({
     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
-const initialMarker = L.marker([-2.9127463739190893, -78.99484858021965], {icon: sonva_Pin}).addTo(map);
+const initialMarker = L.marker([-2.9127463739190893, -78.99484858021965], {icon: sonva_Pin}).addTo(map);// marcador creado
+
 // Asignar una etiqueta al marcador que se muestra al pasar el mouse o al hacer clic
 initialMarker.bindPopup('Sonva');
 
@@ -44,7 +46,7 @@ function updateUserLocationMarker(position) {
     } else {
         // Crea un marcador en la ubicación actual del usuario y agrégalo al mapa
         var person_pin = L.icon({
-            iconUrl: '../img/perso_position.png',
+            iconUrl: 'https://drive.google.com/uc?export=view&id=1phVSQ1ByN7tus8Mu7CNd_ogCinDgbenl',
         
             iconSize:     [50, 50], // size of the icon
             iconAnchor:   [30, 46],
