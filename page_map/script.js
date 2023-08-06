@@ -52,8 +52,11 @@ function addCustomMarker(lat, lng, imageUrl, imageAlt) {
     customMarker.bindPopup(imageAlt);
 }
 
-// Actualiza la ubicación del marcador según la ubicación del usuario
-function updateLocationMarker(position) {
+// Variable para almacenar el marcador del usuario
+let userMarker = null;
+
+// Función para actualizar la ubicación del marcador del usuario
+function updateUserLocationMarker(position) {
     const userLat = position.coords.latitude;
     const userLng = position.coords.longitude;
 
@@ -62,15 +65,32 @@ function updateLocationMarker(position) {
         map.removeLayer(userMarker);
     }
 
-    // Llama a la función para agregar un marcador personalizado en la ubicación actual
-    addCustomMarker(userLat, userLng, '../img/sonva_pin.png', 'Mi Ubicación Actual');
+    // Crea un marcador en la ubicación actual del usuario y agrégalo al mapa
+    userMarker = L.marker([userLat, userLng]).addTo(map);
+
+    // Asigna una etiqueta al marcador que se muestra al pasar el mouse o al hacer clic
+    userMarker.bindPopup('Mi Ubicación Actual');
 
     // Centra el mapa en la nueva ubicación
     map.setView([userLat, userLng], map.getZoom());
 }
 
 // Llama a la función de actualización de ubicación cuando se obtienen los datos de geolocalización
-navigator.geolocation.watchPosition(updateLocationMarker);
+navigator.geolocation.watchPosition(updateUserLocationMarker);
 
-// Inicializa una variable para almacenar el marcador del usuario
-let userMarker = null;
+// Agregar un botón para volver a la ubicación actual del usuario
+const recenterToUserButton = L.control({ position: 'topright' });
+
+recenterToUserButton.onAdd = function (map) {
+    const button = L.DomUtil.create('button', 'recenter-button');
+    button.innerHTML = 'Volver a Mi Ubicación';
+    button.onclick = function () {
+        if (userMarker) {
+            const userLatLng = userMarker.getLatLng();
+            map.setView(userLatLng, map.getZoom());
+        }
+    };
+    return button;
+};
+
+recenterToUserButton.addTo(map);
