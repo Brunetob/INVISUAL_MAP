@@ -1,5 +1,5 @@
 // Inicializar el mapa en el div "map" y hacer zoom en las coordenadas dadas
-const map = L.map('map').setView([-2.9127463739190893, -78.99484858021965], 19);
+const map = L.map('map').setView([-2.9127463739190893, -78.99484858021965], 18);
 
 // Establecer el límite máximo de zoom a 25
 map.options.maxZoom = 18;
