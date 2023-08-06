@@ -1,4 +1,4 @@
-// Inicializar el mapa en el div "map" y hacer zoom en las coordenadas dadas
+// Inicializar el mapa en el div "map" y hacer zoom en las coordenadas de Sonva
 const map = L.map('map').setView([-2.9127463739190893, -78.99484858021965], 19);
 
 // Añadir capa de OpenStreetMap
@@ -7,7 +7,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-// Crear un marcador en las coordenadas iniciales y agregarlo al mapa
+// Crear un marcador en las coordenadas iniciales (Sonva) y agregarlo al mapa
 const initialMarker = L.marker([-2.9127463739190893, -78.99484858021965]).addTo(map);
 
 // Asignar una etiqueta al marcador que se muestra al pasar el mouse o al hacer clic
@@ -39,9 +39,6 @@ function updateUserLocationMarker(position) {
         // Asigna una etiqueta al marcador que se muestra al pasar el mouse o al hacer clic
         userMarker.bindPopup('Mi Ubicación Actual');
     }
-
-    // Centra el mapa en la nueva ubicación
-    map.setView([userLat, userLng], map.getZoom());
 }
 
 // Llama a la función de actualización de ubicación cuando se obtienen los datos de geolocalización
@@ -52,9 +49,9 @@ const recenterButton = L.control({ position: 'topright' });
 
 recenterButton.onAdd = function (map) {
     const button = L.DomUtil.create('button', 'recenter-button');
-    button.innerHTML = 'Reubicar en Sonva';
+    button.innerHTML = 'Reubicarme en Sonva';
     button.onclick = function () {
-        map.setView([-2.9127463739190893, -78.99484858021965], 18);
+        map.setView([-2.9127463739190893, -78.99484858021965], 19);
     };
     return button;
 };
