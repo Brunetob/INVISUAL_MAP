@@ -40,9 +40,49 @@ function updateUserLocationMarker(position) {
         userMarker.bindPopup('Mi Ubicación Actual');
     }
 }
+/************* */
+// Función para mostrar una alerta de audio
+function playAudioAlert(message) {
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(message);
+    synth.speak(utterance);
+}
 
-// Llama a la función de actualización de ubicación cuando se obtienen los datos de geolocalización
-navigator.geolocation.watchPosition(updateUserLocationMarker);
+// Función para verificar los permisos de geolocalización y mostrar la alerta correspondiente
+function checkGeolocationPermission() {
+    if (navigator.permissions) {
+        navigator.permissions.query({ name: 'geolocation' }).then(function(permissionStatus) {
+            if (permissionStatus.state === 'granted') {
+                playAudioAlert("Bienvenido, ahora el mapa funciona.");
+            } else {
+                playAudioAlert("Por favor, concede los permisos de ubicación con el comando: Conceder Permisos");
+                // Escuchar comandos de voz
+                const recognition = new webkitSpeechRecognition();
+                recognition.continuous = true;
+                recognition.onresult = function(event) {
+                    const command = event.results[event.results.length - 1][0].transcript;
+                    if (command.toLowerCase() === "conceder permisos") {
+                        navigator.geolocation.getCurrentPosition(
+                            function() {
+                                playAudioAlert("Bienvenido, ahora el mapa funciona.");
+                            },
+                            function() {
+                                playAudioAlert("No se pudo obtener acceso a la ubicación.");
+                            }
+                        );
+                    }
+                };
+                recognition.start();
+            }
+        });
+    } else {
+        playAudioAlert("Tu navegador no soporta verificación de permisos.");
+    }
+}
+
+// Llama a la función para verificar los permisos de geolocalización cuando la página se carga
+window.onload = checkGeolocationPermission;
+/********************** */
 
 // Agregar un botón para reubicar a la persona sobre el punto inicial Sonva
 const recenterButton = L.control({ position: 'topright' });
