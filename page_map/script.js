@@ -21,6 +21,32 @@ function openPopupOnClick(e) {
 // Asignar el evento clic para mostrar el popup
 initialMarker.on('click', openPopupOnClick);
 
+// Variable para almacenar el marcador del usuario
+let userMarker = null;
+
+// Función para actualizar la ubicación del marcador del usuario
+function updateUserLocationMarker(position) {
+    const userLat = position.coords.latitude;
+    const userLng = position.coords.longitude;
+
+    // Si el marcador del usuario ya existe, actualiza su posición
+    if (userMarker) {
+        userMarker.setLatLng([userLat, userLng]);
+    } else {
+        // Crea un marcador en la ubicación actual del usuario y agrégalo al mapa
+        userMarker = L.marker([userLat, userLng]).addTo(map);
+
+        // Asigna una etiqueta al marcador que se muestra al pasar el mouse o al hacer clic
+        userMarker.bindPopup('Mi Ubicación Actual');
+    }
+
+    // Centra el mapa en la nueva ubicación
+    map.setView([userLat, userLng], map.getZoom());
+}
+
+// Llama a la función de actualización de ubicación cuando se obtienen los datos de geolocalización
+navigator.geolocation.watchPosition(updateUserLocationMarker);
+
 // Agregar un botón para reubicar a la persona sobre el punto inicial Sonva
 const recenterButton = L.control({ position: 'topright' });
 
@@ -34,49 +60,6 @@ recenterButton.onAdd = function (map) {
 };
 
 recenterButton.addTo(map);
-
-// Función para agregar un marcador personalizado en una ubicación
-function addCustomMarker(lat, lng, imageUrl, imageAlt) {
-    // Crea un icono personalizado para el marcador
-    const customIcon = L.icon({
-        iconUrl: imageUrl,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
-    });
-
-    // Crea el marcador con el icono personalizado y agrégalo al mapa
-    const customMarker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
-
-    // Asigna una etiqueta al marcador que se muestra al pasar el mouse o al hacer clic
-    customMarker.bindPopup(imageAlt);
-}
-
-// Variable para almacenar el marcador del usuario
-let userMarker = null;
-
-// Función para actualizar la ubicación del marcador del usuario
-function updateUserLocationMarker(position) {
-    const userLat = position.coords.latitude;
-    const userLng = position.coords.longitude;
-
-    // Elimina el marcador anterior, si existe
-    if (userMarker) {
-        map.removeLayer(userMarker);
-    }
-
-    // Crea un marcador en la ubicación actual del usuario y agrégalo al mapa
-    userMarker = L.marker([userLat, userLng]).addTo(map);
-
-    // Asigna una etiqueta al marcador que se muestra al pasar el mouse o al hacer clic
-    userMarker.bindPopup('Mi Ubicación Actual');
-
-    // Centra el mapa en la nueva ubicación
-    map.setView([userLat, userLng], map.getZoom());
-}
-
-// Llama a la función de actualización de ubicación cuando se obtienen los datos de geolocalización
-navigator.geolocation.watchPosition(updateUserLocationMarker);
 
 // Agregar un botón para volver a la ubicación actual del usuario
 const recenterToUserButton = L.control({ position: 'topright' });
