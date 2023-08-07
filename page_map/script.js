@@ -43,6 +43,7 @@ function updateUserLocationMarker(position) {
     // Si el marcador del usuario ya existe, actualiza su posición
     if (userMarker) {
         userMarker.setLatLng([userLat, userLng]);
+        checkProximity(userMarker.getLatLng());
     } else {
         // Crea un marcador en la ubicación actual del usuario y agrégalo al mapa
         var person_pin = L.icon({
@@ -63,6 +64,24 @@ function updateUserLocationMarker(position) {
 
 // Llama a la función para actualizar la ubicación del marcador del usuario
 navigator.geolocation.watchPosition(updateUserLocationMarker);
+
+function checkProximity(userLatLng) {
+    obstaclesCoordinates.forEach(coord => {
+        const distance = getDistance(userLatLng.lat, userLatLng.lng, coord[0], coord[1]);
+        if (distance <= 2) {
+            const description = coord[2];
+            const message = `Precaución, a 2 metros hay ${description}`;
+            speakMessage(message);
+            alert(message);
+        }
+    });
+}
+
+// Función para reproducir un mensaje de voz
+function speakMessage(message) {
+    const utterance = new SpeechSynthesisUtterance(message);
+    speechSynthesis.speak(utterance);
+}
 
 // Agregar un botón para reubicar a la persona sobre el punto inicial Sonva
 const recenterButton = L.control({ position: 'topright' });
@@ -112,10 +131,37 @@ var obsOneIcon = L.icon({
     iconUrl: 'https://drive.google.com/uc?export=view&id=1LaPTa0TwcOpBzEXcbrZm617cioXSUBU8',
 
     iconSize:     [20, 30], // size of the icon
-    iconAnchor:   [10, 46],
+    iconAnchor:   [10, 40],
     shadowSize:   [50, 64], // size of the shadow
     shadowAnchor: [4, 62],  // the same for the shadow
     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
-const obsOne = L.marker([-2.9127463739190893, -78.99484858021965], {icon: obsOneIcon}).addTo(map);// marcador creado
+// Coordenadas de los obstáculos y sus descripciones
+const obstaclesCoordinates = [
+    [-2.9126727, -78.9948454, 'un poste'],
+    [-2.9126111, -78.9951817, 'un poste'],
+    [-2.9126074, -78.9954261, 'un poste'],
+    [-2.9125468, -78.9955485, 'un poste'],
+    [-2.9124919, -78.9956085, 'un poste'],
+    [-2.9123530, -78.9958050, 'Cable alto 2'],
+    [-2.9124095, -78.9958496, 'un poste'], // De las Acacias - poste
+    [-2.9124856, -78.9959069, 'una bajada'], // De las Acacias - bajada
+    [-2.9127032, -78.9961027, 'un poste y cable'], // De las Acacias - poste y cable
+    [-2.9127692, -78.9961292, 'un cable'], // De las Acacias - cable
+    [-2.9128177, -78.9959435, 'dos parrillas'], // De las Acacias - parrillas 2
+    [-2.9128465, -78.9957980, 'un poste, un cable y dos parrillas'], // De las Acacias - poste y cable dos parrillas
+    [-2.9129188, -78.9955727, 'un poste, un cable y dos parrillas'], // De las Acacias - poste cable y dos parrillas
+    [-2.9129999, -78.9954335, 'una parrilla'], // De las Acacias - parrila
+    [-2.9130310, -78.9953651, 'un poste y una parrilla'], // De las Acacias - poste parrila reves
+    [-2.9132259, -78.9951388, 'un poste'], // De las Acacias - Poste
+    [-2.9134238, -78.9948961, 'un cable y un poste'], // De las Acacias - cable poste
+    [-2.9134107, -78.9947757, 'una bajada'], // Herrerías - bajada
+    [-2.9131271, -78.9948139, 'una bajada'], // Herrerías - bajada
+    [-2.9127179, -78.9948257, 'un poste, un cable y una bajada']  // Herrerías - poste cable bajada
+];
+
+// Agregar los marcadores de obstáculos al mapa
+obstaclesCoordinates.forEach(coord => {
+    L.marker(coord, { icon: obsOneIcon }).addTo(map);
+});
