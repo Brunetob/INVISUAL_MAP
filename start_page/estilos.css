@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    text-transform: capitalize;
+    text-transform:initial;
     text-decoration: none;
     list-style: none;
     font-family: 'Poppins', sans-serif;
