@@ -64,13 +64,15 @@ function updateUserLocationMarker(position) {
 
 // Llama a la función para actualizar la ubicación del marcador del usuario
 navigator.geolocation.watchPosition(updateUserLocationMarker);
-// Función para verificar la proximidad de obstáculos
+
 function checkProximity(userLatLng) {
     obstaclesCoordinates.forEach(coord => {
-        const distance = getDistance(userLatLng.lat, userLatLng.lng, coord[0], coord[1]);
+        const obstacleLatLng = L.latLng(coord[0], coord[1]);
+        const distance = userLatLng.distanceTo(obstacleLatLng);
+
         if (distance <= 2) {
             const description = coord[2];
-            const message = `Precaución, a 2 metros hay ${description}`;
+            const message = `¡Precaución! A 2 metros hay ${description}.`;
             speakMessage(message);
             alert(message);
         }
@@ -163,5 +165,5 @@ const obstaclesCoordinates = [
 
 // Agregar los marcadores de obstáculos al mapa
 obstaclesCoordinates.forEach(coord => {
-    L.marker(coord, { icon: obsOneIcon }).addTo(map);
+    L.marker([coord[0], coord[1]], { icon: obsOneIcon }).addTo(map);
 });
