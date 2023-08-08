@@ -7,10 +7,13 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
+// Variable para almacenar la capa de marcadores de obstáculos
+let obstaclesLayer = L.layerGroup().addTo(map);
+
 // ***Crear un marcador en las coordenadas iniciales (Sonva) y agregarlo al mapa ***
 //crear ícono del marcador
 var sonva_Pin = L.icon({
-    iconUrl: 'https://drive.google.com/uc?export=view&id=1fYDCDYPuWH9lm77oV_3D-2M3GOBXy8ot',
+    iconUrl: 'https://png.pngtree.com/png-vector/20230313/ourmid/pngtree-building-location-pointer-vector-png-image_6647661.png',
 
     iconSize:     [50, 50], // size of the icon
     iconAnchor:   [50, 46],
@@ -47,7 +50,7 @@ function updateUserLocationMarker(position) {
     } else {
         // Crea un marcador en la ubicación actual del usuario y agrégalo al mapa
         var person_pin = L.icon({
-            iconUrl: 'https://drive.google.com/uc?export=view&id=1phVSQ1ByN7tus8Mu7CNd_ogCinDgbenl',
+            iconUrl: 'https://cdn.icon-icons.com/icons2/882/PNG/512/1-18_icon-icons.com_68869.png',
         
             iconSize:     [50, 50], // size of the icon
             iconAnchor:   [30, 46],
@@ -128,7 +131,7 @@ var polygon = L.polygon([
 //******************************Marcadores de los obstáculos******************************
 //crear ícono del marcador
 var obsOneIcon = L.icon({
-    iconUrl: 'https://drive.google.com/uc?export=view&id=1LaPTa0TwcOpBzEXcbrZm617cioXSUBU8',
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/1673/1673264.png',
 
     iconSize:     [20, 30], // size of the icon
     iconAnchor:   [10, 40],
@@ -163,7 +166,8 @@ const obstaclesCoordinates = [
 
 // Agregar los marcadores de obstáculos al mapa
 obstaclesCoordinates.forEach(coord => {
-    L.marker(coord, { icon: obsOneIcon }).addTo(map);
+    //L.marker(coord, { icon: obsOneIcon }).addTo(map);
+    L.marker(coord, { icon: obsOneIcon }).addTo(obstaclesLayer);
 });
 
 /*Comandos de voz */
@@ -201,10 +205,32 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (result.includes('ir a mapa') || result.includes('mostrar mapa') || result.includes('mapa') || result.includes('abrir mapa') || result.includes('quiero ver mapa') || result.includes('avanzar')) {
             window.location.href = 'https://brunetob.github.io/page_map/map.html';
         } else if (result.includes('volver') || result.includes('regresar') || result.includes('inicio') || result.includes('mostrar inicio') || result.includes('volver al inicio') || result.includes('retroceder')) {
-            window.location.href = 'https://invisual-map.vercel.app/';
+            window.location.href = 'https://invisual-map.vercel.app';
+        } else if (result.includes('crear obstáculo')) {
+            createObstacleMarker(userMarker.getLatLng());
         }
     };
+    //***********Función para guardar datos en firebase
+    async function createObstacleMarker(latlng) {
+        const description = 'Nuevo obstáculo';
 
+        // Agregar los datos del obstáculo a la base de datos
+        try {
+            await db.collection("Descripcion").add({
+                Obstaculos: description,
+                Latitud: latlng.lat,
+                Longitud: latlng.lng,
+            });
+            speakMessage('Nuevo obstáculo creado y almacenado en la base de datos.');
+        } catch (error) {
+            console.error("Error al guardar el obstáculo en la base de datos:", error);
+            speakMessage('Ha ocurrido un error al guardar el obstáculo.');
+        }
+
+        // Agregar el marcador en el mapa
+        L.marker([latlng.lat, latlng.lng], { icon: obsOneIcon }).addTo(obstaclesLayer);
+    }
+    //***********Fin función para guardar datos en firebase
     function speakMessage(message) {
         const utterance = new SpeechSynthesisUtterance(message);
         speechSynthesis.speak(utterance);
