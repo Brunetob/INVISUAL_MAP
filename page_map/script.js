@@ -64,17 +64,23 @@ function updateUserLocationMarker(position) {
 
 // Llama a la función para actualizar la ubicación del marcador del usuario
 navigator.geolocation.watchPosition(updateUserLocationMarker);
-
 // Función para verificar la proximidad de obstáculos
 function checkProximity(userLatLng) {
     obstaclesCoordinates.forEach(coord => {
         const distance = getDistance(userLatLng.lat, userLatLng.lng, coord[0], coord[1]);
         if (distance <= 2) {
-            const audio = new Audio('URL_DEL_AUDIO_DE_ALERTA');
-            audio.play();
-            alert(`Precaución, a 2 metros hay ${coord[2]}`);
+            const description = coord[2];
+            const message = `Precaución, a 2 metros hay ${description}`;
+            speakMessage(message);
+            alert(message);
         }
     });
+}
+
+// Función para reproducir un mensaje de voz
+function speakMessage(message) {
+    const utterance = new SpeechSynthesisUtterance(message);
+    speechSynthesis.speak(utterance);
 }
 
 // Agregar un botón para reubicar a la persona sobre el punto inicial Sonva
@@ -158,4 +164,63 @@ const obstaclesCoordinates = [
 // Agregar los marcadores de obstáculos al mapa
 obstaclesCoordinates.forEach(coord => {
     L.marker(coord, { icon: obsOneIcon }).addTo(map);
+});
+
+/*Comandos de voz */
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleMicrophoneButton = document.getElementById('toggleMicrophoneButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+
+    recognition.lang = 'es'; // Establece el idioma a español
+
+    let microphoneEnabled = false;
+
+    // Función para activar/desactivar el micrófono
+    toggleMicrophoneButton.addEventListener('click', () => {
+        if (microphoneEnabled) {
+            recognition.stop();
+            microphoneEnabled = false;
+            toggleMicrophoneButton.textContent = 'Activar Micrófono';
+        } else {
+            recognition.start();
+            microphoneEnabled = true;
+            toggleMicrophoneButton.textContent = 'Desactivar Micrófono';
+        }
+    });
+
+    recognition.onresult = (event) => {
+        const result = event.results[0][0].transcript.toLowerCase();
+        console.log('Comando de voz detectado:', result);
+
+        // Comandos de voz
+        if (result.includes('reproducir comandos') || result.includes('repetir comandos') || result.includes('volver a escuchar comandos')) {
+            const commands = "Para volver a escuchar los comandos de voz y poder navegar por la página, pruebe a decir: ir a mapa, mostrar mapa, mapa, abrir mapa, quiero ver mapa, avanzar. Para detener los audios en cualquier caso, diga: detener audios, parar, detener, quitar. Para ir al inicio o volver, diga: volver, regresar, inicio, mostrar inicio, volver al inicio, retroceder.";
+            speakMessage(commands);
+        } else if (result.includes('detener audios') || result.includes('parar') || result.includes('detener') || result.includes('quitar')) {
+            speechSynthesis.cancel();
+        } else if (result.includes('ir a mapa') || result.includes('mostrar mapa') || result.includes('mapa') || result.includes('abrir mapa') || result.includes('quiero ver mapa') || result.includes('avanzar')) {
+            window.location.href = 'https://brunetob.github.io/page_map/map.html';
+        } else if (result.includes('volver') || result.includes('regresar') || result.includes('inicio') || result.includes('mostrar inicio') || result.includes('volver al inicio') || result.includes('retroceder')) {
+            window.location.href = 'https://invisual-map.vercel.app/';
+        }
+    };
+
+    function speakMessage(message) {
+        const utterance = new SpeechSynthesisUtterance(message);
+        speechSynthesis.speak(utterance);
+    }
+
+    async function checkAudioPermissions() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            microphoneEnabled = true;
+            toggleMicrophoneButton.textContent = 'Desactivar Micrófono';
+            recognition.start();
+        } catch (error) {
+            toggleMicrophoneButton.disabled = true;
+            toggleMicrophoneButton.textContent = 'Micrófono no disponible';
+        }
+    }
+
+    checkAudioPermissions();
 });
