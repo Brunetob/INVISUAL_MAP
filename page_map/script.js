@@ -64,23 +64,17 @@ function updateUserLocationMarker(position) {
 
 // Llama a la función para actualizar la ubicación del marcador del usuario
 navigator.geolocation.watchPosition(updateUserLocationMarker);
+
 // Función para verificar la proximidad de obstáculos
 function checkProximity(userLatLng) {
     obstaclesCoordinates.forEach(coord => {
         const distance = getDistance(userLatLng.lat, userLatLng.lng, coord[0], coord[1]);
         if (distance <= 2) {
-            const description = coord[2];
-            const message = `Precaución, a 2 metros hay ${description}`;
-            speakMessage(message);
-            alert(message);
+            const audio = new Audio('URL_DEL_AUDIO_DE_ALERTA');
+            audio.play();
+            alert(`Precaución, a 2 metros hay ${coord[2]}`);
         }
     });
-}
-
-// Función para reproducir un mensaje de voz
-function speakMessage(message) {
-    const utterance = new SpeechSynthesisUtterance(message);
-    speechSynthesis.speak(utterance);
 }
 
 // Agregar un botón para reubicar a la persona sobre el punto inicial Sonva
